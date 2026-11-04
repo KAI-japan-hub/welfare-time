@@ -100,7 +100,7 @@
           "image_url": "",
           "headline": "",
           "start_time": "6:00",
-          "end_time": "18:00",
+          "end_time": "22:00",
           "business_hours": "日~月 6:00~22:00",
           "note": ""
         },
@@ -184,6 +184,20 @@
           "start_time": "10:00",
           "end_time": "15:00",
           "business_hours": "平日 10:00~19:00 土 10:00~15:00",
+          "note": ""
+        },
+        {
+          "id": "family-mart-motoyama",
+          "name": "ファミリーマート",
+          "location": "本山寮",
+          "category": "コンビニ",
+          "url": "",
+          "google_map": "",
+          "image_url": "",
+          "headline": "",
+          "start_time": "6:00",
+          "end_time": "22:00",
+          "business_hours": "日~月 6:00~22:00",
           "note": ""
         },
         {
@@ -487,7 +501,7 @@
           "google_map": "",
           "image_url": "",
           "headline": "",
-          "start_time": "9:00",
+          "start_time": "6:00",
           "end_time": "22:00",
           "business_hours": "日~月 6:00~22:00",
           "note": ""

@@ -1167,13 +1167,20 @@
       "date": "2026-11-03",
       "location": "本山寮",
       "start_time": "6:00",
-      "end_time": "18:00",
+      "end_time": "22:00",
+      "note": ""
+    },
+    {
+      "date": "2026-11-04",
+      "location": "本山寮",
+      "start_time": "6:00",
+      "end_time": "22:00",
       "note": ""
     },
     {
       "date": "2026-11-05",
       "location": "本山寮",
-      "start_time": "9:00",
+      "start_time": "6:00",
       "end_time": "22:00",
       "note": ""
     },
