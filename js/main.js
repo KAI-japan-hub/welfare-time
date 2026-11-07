@@ -1,9 +1,9 @@
 const BASE_PATH = window.BASE_PATH;
 const API_BASE = `${BASE_PATH}/api/schedule`;
 const STATUS_API = `${BASE_PATH}/api/status`;
-const LABE_NOW_OPEN = '🟢 営業中';
-const LABE_PREPARING = '🟡 準備中';
-const LABE_CLOSED = '🔵 営業終了';
+const LABEL_NOW_OPEN = '🟢 営業中';
+const LABEL_PREPARING = '🟡 準備中';
+const LABEL_CLOSED = '🔵 営業終了';
 
 let currentData = null;
 let master = null;
@@ -18,11 +18,25 @@ const currentView = isMapPage ? 'list' : 'grid';
 
 function getTargetDateStr() {
     const urlParams = new URLSearchParams(window.location.search);
-    let dateStr = urlParams.get('date');
-    if (!dateStr || dateStr === 'today') {
-        dateStr = todayJst();
+    const dateStr = urlParams.get('date');
+
+    if (dateStr && /^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+        const [year, month, day] = dateStr.split('-').map(Number);
+
+        // タイムゾーンへの依存を避け、日付の自動補正を検出するためUTCで比較する。
+        const date = new Date(0);
+        date.setUTCFullYear(year, month - 1, day);
+
+        if (
+            date.getUTCFullYear() === year &&
+            date.getUTCMonth() === month - 1 &&
+            date.getUTCDate() === day
+        ) {
+            return dateStr;
+        }
     }
-    return dateStr;
+    // 未指定、today、または不正な日付の場合は日本時間の今日を返す
+    return todayJst();
 }
 
 function todayJst() {
@@ -52,15 +66,15 @@ function getShopStatus(startTime, endTime, targetDateStr) {
     });
 
     const [hours, minutes] = nowTime.split(':').map(Number);
-    if (targetDateStr < todayStr) return { label: LABE_CLOSED, class: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400' };
-    if (targetDateStr > todayStr) return { label: LABE_PREPARING, class: 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' };
+    if (targetDateStr < todayStr) return { label: LABEL_CLOSED, class: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400' };
+    if (targetDateStr > todayStr) return { label: LABEL_PREPARING, class: 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' };
 
     const nowTotal = hours * 60 + minutes;
     const [sh, sm] = startTime.split(':').map(Number);
     const [eh, em] = endTime.split(':').map(Number);
-    if (nowTotal < (sh*60+sm)) return { label: LABE_PREPARING, class: 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' };
-    if (nowTotal >= (sh*60+sm) && nowTotal < (eh*60+em)) return { label: LABE_NOW_OPEN, class: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' };
-    return { label: LABE_CLOSED, class: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400' };
+    if (nowTotal < (sh*60+sm)) return { label: LABEL_PREPARING, class: 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' };
+    if (nowTotal >= (sh*60+sm) && nowTotal < (eh*60+em)) return { label: LABEL_NOW_OPEN, class: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' };
+    return { label: LABEL_CLOSED, class: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400' };
 }
 
 function updateElementText(id, text) {
@@ -255,10 +269,10 @@ function render(onRendered) {
     const getLabel = (s) => getShopStatus(s.start_time, s.end_time, targetDateStr).label;
     
     // 1. Filter
-    allShops = allShops.filter(s => Filter.match(s, getLabel(s), LABE_NOW_OPEN));
+    allShops = allShops.filter(s => Filter.match(s, getLabel(s), LABEL_NOW_OPEN));
 
     // 2. Sort
-    allShops = Sort.sort(allShops, getLabel, LABE_NOW_OPEN);
+    allShops = Sort.sort(allShops, getLabel, LABEL_NOW_OPEN);
 
     renderedCardIds = allShops.map(shop => 'card-' + shop.id);
     if (allShops.length === 0) {
