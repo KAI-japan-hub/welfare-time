@@ -587,6 +587,5 @@ if (dateSelector && dateInput && typeof flatpickr === 'function') {
 // }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const isDataPage = ['index.html', 'map.html', '', '/'].some(page => window.location.pathname.endsWith(page));
-    if (isDataPage) fetchData();
+    if (document.getElementById('shop-grid')) fetchData();
 });
