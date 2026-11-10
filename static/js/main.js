@@ -137,7 +137,15 @@ async function fetchData() {
 
         if (statusRes.ok) {
             const status = await statusRes.json();
-            updateElementText('status-info', '最終更新: ' + new Date(status.last_updated).toLocaleString('ja-JP'));
+            const updated = new Date(status.last_updated).toLocaleString('sv-SE', {
+                timeZone: 'Asia/Tokyo',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+            });
+            updateElementText('status-info', '最終更新：' + updated);
             updateElementText('header-data-range', '提供範囲: ' + status.data_range.start + ' ～ ' + status.data_range.end);
         }
     } catch (e) {
